@@ -1,5 +1,6 @@
 from entity.Task import Task
 from entity.Map import Map
+from entity.SafeInterval import SafeInterval
 
 TRAVERSABLE_TERRAIN = '.G'
 NOT_TRAVERSABLE_TERRAIN = '@OT'
@@ -11,19 +12,19 @@ def read_map_from_movingai_file(path):
         h = int(f.readline().split()[1])
         w = int(f.readline().split()[1])
         f.readline()
-        grid_cells = [[None for _ in range(w)] for _ in range(h)]
+        safe_intervals = [[[] for _ in range(w)] for _ in range(h)]
         for i in range(h):
             line = f.readline()
             for j in range(w):
                 if line[j] in TRAVERSABLE_TERRAIN:
-                    grid_cells[i][j] = 0
+                    safe_intervals[i][j].append(SafeInterval())
                 elif line[j] in NOT_TRAVERSABLE_TERRAIN:
-                    grid_cells[i][j] = 1
+                    continue
                 else:
                     raise ValueError(f"Error while parsing a map from MovingAI file: unexpected symbol '{line[j]}' "
                                      f"occurred.")
 
-    return Map().set_grid_cells(w, h, grid_cells)
+    return Map().set_map_properties(w, h, safe_intervals)
 
 
 def read_tasks_from_movingai_file(path):
