@@ -24,7 +24,9 @@ def read_map_from_movingai_file(path):
                     raise ValueError(f"Error while parsing a map from MovingAI file: unexpected symbol '{line[j]}' "
                                      f"occurred.")
 
-    return Map().set_map_properties(w, h, safe_intervals)
+    grid_map = Map()
+    grid_map.set_map_properties(w, h, safe_intervals)
+    return grid_map
 
 
 def read_tasks_from_movingai_file(path):
