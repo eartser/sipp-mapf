@@ -1,4 +1,5 @@
 from .SafeInterval import SafeInterval
+from math import inf
 
 
 class Map:
@@ -7,7 +8,7 @@ class Map:
         self._width = 0
         self._height = 0
         self._safe_intervals = [[[] for _ in range(self._width)] for _ in range(self._height)]
-        self.obstacles = []
+        self.obstacles = []  # list of paths of obstacles
 
     def set_map_properties(self, width, height, safe_intervals=None):
         self._width = width
@@ -15,13 +16,13 @@ class Map:
         if safe_intervals is None:
             self._safe_intervals = [[[] for _ in range(self._width)] for _ in range(self._height)]
         else:
-            self._safe_intervals = safe_intervals
+            self._safe_intervals = safe_intervals  # TODO: do we need copy here?
 
     def in_bounds(self, i, j):
         return (0 <= j < self._width) and (0 <= i < self._height)
 
     def traversable(self, i, j):
-        return len(self._safe_intervals[i][j]) > 0
+        return len(self._safe_intervals[i][j]) > 0  # list is empty for static obstacles
 
     def get_neighbors(self, i, j):
         neighbors = []
@@ -34,8 +35,8 @@ class Map:
 
     def get_successors(self, node):
         successors = []
-        start_t = node.g + 1
-        end_t = self._safe_intervals[node.i][node.j][node.interval].end + 1
+        start_t = node.g + 1  # the earliest time we can get to the successor
+        end_t = self._safe_intervals[node.i][node.j][node.interval].end + 1  # the latest time -//-
         for m in self.get_neighbors(node.i, node.j):
             i, j = m
             for int_i, safe_interval in enumerate(self._safe_intervals[i][j]):
@@ -43,10 +44,13 @@ class Map:
                     continue
 
                 t = max(start_t, safe_interval.start)
-                if t == safe_interval.start:
+
+                # edge collisions
+                if t == safe_interval.start:  # otherwise in timestamp t-1 the cell is empty, no edge collisions
                     for obstacle in self.obstacles:
+                        # edge collision condition
                         if t < len(obstacle) and obstacle[t-1] == (i, j) and obstacle[t] == (node.i, node.j):
-                            t = min(end_t, safe_interval.end) + 1
+                            t = inf  # in this case we can't go to this cell
                             break
 
                 if t > min(end_t, safe_interval.end):

@@ -6,7 +6,7 @@ class Node:
         self.g = g
         self.h = h
         if f is None:
-            self.f = self.g + h
+            self.f = self.g + self.h
         else:
             self.f = f
         self.interval = interval
