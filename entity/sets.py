@@ -52,3 +52,63 @@ class Closed:
 
     def was_expanded(self, item: Node):
         return item.get_pos() in self.nodes
+
+
+class OpenAndClosed:
+
+    def __init__(self):
+        self.data = []
+        self.nodes = {}
+        self.exp = {}
+        self.reexp = {}
+        self.reexp_cnt = 0
+
+    def __iter__(self):
+        return iter(self.nodes.values())
+
+    def __len__(self):
+        return len(self.nodes)
+
+    def is_empty(self):
+        return len(self.data) == 0
+
+    def expand(self, node):
+        pos = node.get_pos()
+        if pos in self.exp:
+            self.reexp_cnt += 1
+            self.reexp[pos] = node
+        self.exp[pos] = node
+
+    def add_node(self, node):
+        pos = node.get_pos()
+        if pos in self.nodes:
+            cur_node = self.nodes[pos]
+            if cur_node.g <= node.g:
+                return
+            if cur_node in self.data:
+                self.data.remove(cur_node)
+        self.nodes[pos] = node
+        if pos in self.exp:
+            self.exp[pos] = node
+        if pos in self.reexp:
+            self.reexp[pos] = node
+        heapq.heappush(self.data, node)
+
+    def get_best_node(self):
+        best = self.data[0]
+        heapq.heappop(self.data)
+        self.expand(best)
+        return best
+
+    @property
+    def expanded(self):
+        return self.exp.values()
+
+    @property
+    def reexpanded(self):
+        return self.reexp.values()
+
+    @property
+    def number_of_reexpansions(self):
+        return self.reexp_cnt
+
