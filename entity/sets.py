@@ -100,6 +100,17 @@ class OpenAndClosed:
         self.expand(best)
         return best
 
+    def get_node(self, node):
+        if node in self.data:
+            ind = self.data.index(node)
+            self.data[ind] = self.data[-1]
+            self.data.pop()
+            if ind < len(self.data):
+                heapq._siftup(self.data, ind)
+                heapq._siftdown(self.data, 0, ind)
+        self.expand(node)
+        return node
+
     @property
     def expanded(self):
         return self.exp.values()
@@ -112,3 +123,41 @@ class OpenAndClosed:
     def number_of_reexpansions(self):
         return self.reexp_cnt
 
+    @property
+    def best_f_value(self):
+        return self.data[0].f
+
+
+class Focal:
+
+    def __init__(self, heuristic_func):
+        self.heuristic_func = heuristic_func
+        self.data = []
+        self.nodes = {}
+
+    def __len__(self):
+        return len(self.nodes)
+
+    def __iter__(self):
+        return iter(self.nodes.values())
+
+    def is_empty(self):
+        return len(self) == 0
+
+    def add_node(self, node: Node):
+        pos = node.get_pos()
+        if pos in self.nodes:
+            cur_node = self.nodes[pos]
+            if cur_node.g <= node.g:
+                return
+        self.nodes[pos] = node
+        heapq.heappush(self.data, (self.heuristic_func(node), node))
+
+    def get_best_node(self):
+        while True:
+            best = self.data[0]
+            heapq.heappop(self.data)
+            if best[1].get_pos() in self.nodes:
+                break
+        del self.nodes[best[1].get_pos()]
+        return best[1]
