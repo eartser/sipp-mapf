@@ -75,7 +75,7 @@ class Map:
     def apply_dynamic_obstacles(self, paths_list):
 
         for path in paths_list:
-            extended_path = extended_path(path)
+            extended_path = self.extended_path(path)
             self.obstacles.append(extended_path)
             obstacle_in_cell = [[[] for _ in range(self._width)] for _ in range(self._height)]
             updated_cells = set()
