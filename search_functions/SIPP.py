@@ -1,4 +1,4 @@
-from .SearchFunction import SearchFunction
+from search_functions.SearchFunction import SearchFunction
 from entity.sets import Open, Closed
 from entity.Node import Node
 
