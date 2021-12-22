@@ -52,18 +52,18 @@ class AnytimeSIPP(SearchFunction):
             CLOSED.add_node(s)
 
             opt = [False]
-            if s.optimal:
+            if not s.subopt:
                 opt.append(True)
 
             for o in opt:
                 for i, j, interval, t in grid_map.get_successors(s):
-                    newNode = Node(i, j, g=t, interval=interval, optimal=o, parent=s)
+                    newNode = Node(i, j, g=t, interval=interval, subopt=not o, parent=s)
                     if CLOSED.was_expanded(newNode):
                         expandedNode = CLOSED.nodes[newNode.get_pos()]
                         if expandedNode.g > t:
                             expandedNode.parent = s
                             expandedNode.g = t
-                            expandedNode.optimal = o
+                            expandedNode.subopt = o
                             INCONS.append(expandedNode)
                             CLOSED.nodes[newNode.get_pos()] = expandedNode
                     else:
