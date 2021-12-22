@@ -5,7 +5,12 @@ from entity.Node import Node
 
 class FocalSIPP(SearchFunction):
 
-    def find(self, grid_map, start_i, start_j, goal_i, goal_j):
+    def __init__(self, heuristic_function, additional_heuristic_function, w=1):
+        super().__init__(heuristic_function)
+        self.w = w
+        self.additional_heuristic_function = additional_heuristic_function
+
+    def _find(self, grid_map, start_i, start_j, goal_i, goal_j):
         OPEN_AND_CLOSED = OpenAndClosed()
         FOCAL = Focal(self.additional_heuristic_function)
 
@@ -19,7 +24,8 @@ class FocalSIPP(SearchFunction):
             cur_node = FOCAL.get_best_node()
             OPEN_AND_CLOSED.get_node(cur_node)
             if cur_node.i == goal_i and cur_node.j == goal_j:
-                return True, cur_node, OPEN_AND_CLOSED
+                self.publish_solution(cur_node)
+                return True, cur_node
 
             for i, j, interval, t in grid_map.get_successors(cur_node):
                 h = self.heuristic_function(i, j, goal_i, goal_j)
@@ -35,4 +41,4 @@ class FocalSIPP(SearchFunction):
                         if self.w * f_min < node.f <= self.w * f_new:
                             FOCAL.add_node(node)
 
-        return False, None, OPEN_AND_CLOSED
+        return False, None

@@ -5,7 +5,11 @@ from entity.Node import Node
 
 class WdSIPP(SearchFunction):
 
-    def find(self, grid_map, start_i, start_j, goal_i, goal_j):
+    def __init__(self, heuristic_function, w=1):
+        super().__init__(heuristic_function)
+        self.w = w
+
+    def _find(self, grid_map, start_i, start_j, goal_i, goal_j):
         OPEN = Open()
         CLOSED = Closed()
 
@@ -17,7 +21,8 @@ class WdSIPP(SearchFunction):
             cur_node = OPEN.get_best_node()
             CLOSED.add_node(cur_node)
             if cur_node.i == goal_i and cur_node.j == goal_j:
-                return True, cur_node, CLOSED, OPEN
+                self.publish_solution(cur_node)
+                return True, cur_node
 
             for i, j, interval, t in grid_map.get_successors(cur_node):
                 h = self.heuristic_function(i, j, goal_i, goal_j)
@@ -28,12 +33,16 @@ class WdSIPP(SearchFunction):
                 if not CLOSED.was_expanded(new_node_subopt):
                     OPEN.add_node(new_node_subopt)
 
-        return False, None, CLOSED, OPEN
+        return False, None
 
 
 class WrSIPP(SearchFunction):
 
-    def find(self, grid_map, start_i, start_j, goal_i, goal_j):
+    def __init__(self, heuristic_function, w=1):
+        super().__init__(heuristic_function)
+        self.w = w
+
+    def _find(self, grid_map, start_i, start_j, goal_i, goal_j):
         OPEN_AND_CLOSED = OpenAndClosed()
 
         start = Node(start_i, start_j, h=self.w * self.heuristic_function(start_i, start_j, goal_i, goal_j))
@@ -43,11 +52,12 @@ class WrSIPP(SearchFunction):
         while not OPEN_AND_CLOSED.is_empty():
             cur_node = OPEN_AND_CLOSED.get_best_node()
             if cur_node.i == goal_i and cur_node.j == goal_j:
-                return True, cur_node, OPEN_AND_CLOSED
+                self.publish_solution(cur_node)
+                return True, cur_node
 
             for i, j, interval, t in grid_map.get_successors(cur_node):
                 h = self.w * self.heuristic_function(i, j, goal_i, goal_j)
                 new_node = Node(i, j, g=t, h=h, interval=interval, parent=cur_node)
                 OPEN_AND_CLOSED.add_node(new_node)
 
-        return False, None, OPEN_AND_CLOSED
+        return False, None

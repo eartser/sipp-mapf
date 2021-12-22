@@ -7,11 +7,10 @@ from math import inf
 class AnytimeSIPP(SearchFunction):
 
     def __init__(self, heuristic_function):
-        super().__init__(heuristic_function, w=inf)
+        super().__init__(heuristic_function)
         self.start_epsilon = 10
-        self.solution = None
 
-    def find(self, grid_map, start_i, start_j, goal_i, goal_j):
+    def _find(self, grid_map, start_i, start_j, goal_i, goal_j):
         OPEN = Open()
         INCONS = []
 
@@ -23,9 +22,9 @@ class AnytimeSIPP(SearchFunction):
 
         if goalNode is not None:
             epsilon = min(self.start_epsilon, goalNode.g / min(self.get_min_sum_gh(OPEN), self.get_min_sum_gh(INCONS)))
-            self.publish_solution(goalNode, epsilon)
+            self.publish_solution(goalNode)
         else:
-            return False, None, inf
+            return self.path_found, self.goal_node
 
         while epsilon > 1:
             epsilon = (epsilon + 1) / 2
@@ -36,10 +35,9 @@ class AnytimeSIPP(SearchFunction):
 
             OPEN, INCONS, goalNode = self.improve_path(OPEN, INCONS, grid_map, epsilon, goal_i, goal_j)
             epsilon = min(epsilon, goalNode.g / min(self.get_min_sum_gh(OPEN), self.get_min_sum_gh(INCONS)))
-            self.publish_solution(goalNode, epsilon)
+            self.publish_solution(goalNode)
 
-        return True, self.solution, self.w
-
+        return self.path_found, self.goal_node
 
     def improve_path(self, OPEN, INCONS, grid_map, epsilon, goal_i, goal_j):
         CLOSED = Closed()
@@ -75,10 +73,6 @@ class AnytimeSIPP(SearchFunction):
                         OPEN.add_node(newNode)
 
         return OPEN, INCONS, None
-
-    def publish_solution(self, goalNode, epsilon):
-        self.solution = goalNode
-        self.w = epsilon
 
     def get_min_sum_gh(self, array):
         minSum = inf

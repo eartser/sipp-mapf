@@ -18,3 +18,14 @@ class Node:
 
     def get_pos(self):
         return self.i, self.j, self.interval, self.subopt
+
+    def __str__(self):
+        return f'(i={self.i}, j={self.j}, int={self.interval}, t={self.g})'
+
+    def __repr__(self):
+        return str(self)
+
+
+class TimestampSearchNode(Node):
+    def get_pos(self):
+        return self.i, self.j, self.g

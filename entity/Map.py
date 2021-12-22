@@ -61,17 +61,18 @@ class Map:
     def get_size(self):
         return self._height, self._width
 
-    def apply_dynamic_obstacles(self, paths_list):
+    @staticmethod
+    def extended_path(path):
+        new_path = []
+        for ind in range(1, len(path)):
+            cur_node = path[ind]
+            prev_node = path[ind - 1]
+            for _ in range(cur_node.g - prev_node.g):
+                new_path.append((prev_node.i, prev_node.j))
+        new_path.append((path[-1].i, path[-1].j))
+        return new_path
 
-        def extended_path(path):
-            new_path = []
-            for ind in range(1, len(path)):
-                cur_node = path[ind]
-                prev_node = path[ind-1]
-                for _ in range(cur_node.g - prev_node.g):
-                    new_path.append((prev_node.i, prev_node.j))
-            new_path.append((path[-1].i, path[-1].j))
-            return new_path
+    def apply_dynamic_obstacles(self, paths_list):
 
         for path in paths_list:
             extended_path = extended_path(path)
@@ -106,3 +107,39 @@ class Map:
                         new_safe_intervals.append(SafeInterval(cur_start, interval.end))
 
                 self._safe_intervals[i][j] = new_safe_intervals
+
+
+class TimestampSearchMap(Map):
+
+    def __init__(self, grid_map):
+        super().__init__()
+        self._width = grid_map._width
+        self._height = grid_map._height
+        self._safe_intervals = grid_map._safe_intervals
+
+    def get_neighbors(self, i, j):
+        neighbors = super().get_neighbors(i, j)
+        neighbors.append((i, j))
+        return neighbors
+
+    def get_successors(self, node):
+
+        def check_move(i1, j1, i2, j2, t):
+            for obstacle in self.obstacles:
+                if t + 1 < len(obstacle) and obstacle[t + 1] == (i2, j2):
+                    return False
+                if t + 1 < len(obstacle) and obstacle[t] == (i2, j2) and obstacle[t + 1] == (i1, j1):
+                    return False
+            return True
+
+        successors = []
+        for m in self.get_neighbors(node.i, node.j):
+            i, j = m
+            if not check_move(node.i, node.j, i, j, node.g):
+                continue
+            successors.append((i, j))
+        return successors
+
+    def apply_dynamic_obstacles(self, paths_list):
+        for path in paths_list:
+            self.obstacles.append(self.extended_path(path))
