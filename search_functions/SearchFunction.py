@@ -4,9 +4,10 @@ from entity.Node import Node
 
 class SearchFunction:
 
-    def __init__(self, heuristic_function, w=1):
+    def __init__(self, heuristic_function, w=1, additional_heuristic_function=None):
         self.heuristic_function = heuristic_function
         self.w = w
+        self.additional_heuristic_function = additional_heuristic_function
 
     def find(self, grid_map, start_i, start_j, goal_i, goal_j):
         raise NotImplementedError
