@@ -9,7 +9,7 @@ class WdSIPP(SearchFunction):
         OPEN = Open()
         CLOSED = Closed()
 
-        start = Node(start_i, start_j, h=self.heuristic_function(start_i, start_j, goal_i, goal_j))
+        start = Node(start_i, start_j, h=self.w * self.heuristic_function(start_i, start_j, goal_i, goal_j))
 
         OPEN.add_node(start)
 
@@ -36,7 +36,7 @@ class WrSIPP(SearchFunction):
     def find(self, grid_map, start_i, start_j, goal_i, goal_j):
         OPEN_AND_CLOSED = OpenAndClosed()
 
-        start = Node(start_i, start_j, h=self.heuristic_function(start_i, start_j, goal_i, goal_j))
+        start = Node(start_i, start_j, h=self.w * self.heuristic_function(start_i, start_j, goal_i, goal_j))
 
         OPEN_AND_CLOSED.add_node(start)
 
