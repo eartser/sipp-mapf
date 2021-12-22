@@ -62,7 +62,47 @@ class Map:
         return self._height, self._width
 
     def apply_dynamic_obstacles(self, paths_list):
+
+        def extended_path(path):
+            new_path = []
+            for ind in range(1, len(path)):
+                cur_node = path[ind]
+                prev_node = path[ind-1]
+                for _ in range(cur_node.g - prev_node.g):
+                    new_path.append((prev_node.i, prev_node.j))
+            new_path.append((path[-1].i, path[-1].j))
+            return new_path
+
         for path in paths_list:
-            for node in path:
-                # Update safe interval
-                pass
+            extended_path = extended_path(path)
+            self.obstacles.append(extended_path)
+            obstacle_in_cell = [[[] for _ in range(self._width)] for _ in range(self._height)]
+            updated_cells = set()
+            for t, (i, j) in enumerate(extended_path):
+                updated_cells.add((i, j))
+                obstacle_in_cell[i][j].append(t)
+
+            for i, j in updated_cells:
+                k = 0
+                new_safe_intervals = []
+                for interval in self._safe_intervals[i][j]:
+                    while k < len(obstacle_in_cell[i][j]) and obstacle_in_cell[i][j][k] < interval.start:
+                        k += 1
+
+                    if k >= len(obstacle_in_cell[i][j]):
+                        new_safe_intervals.append(interval)
+                        continue
+
+                    cur_start = interval.start
+                    while k < len(obstacle_in_cell[i][j]) and obstacle_in_cell[i][j][k] <= interval.end:
+                        cur_end = obstacle_in_cell[i][j][k] - 1
+                        if cur_start <= cur_end:
+                            new_safe_intervals.append(SafeInterval(cur_start, cur_end))
+
+                        cur_start = cur_end + 2
+                        k += 1
+
+                    if cur_start <= interval.end:
+                        new_safe_intervals.append(SafeInterval(cur_start, interval.end))
+
+                self._safe_intervals[i][j] = new_safe_intervals
