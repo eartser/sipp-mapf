@@ -130,8 +130,10 @@ class OpenAndClosed:
 
 class Focal:
 
-    def __init__(self, heuristic_func):
+    def __init__(self, heuristic_func, goal_i, goal_j):
         self.heuristic_func = heuristic_func
+        self.goal_i = goal_i
+        self.goal_j = goal_j
         self.data = []
         self.nodes = {}
 
@@ -151,7 +153,7 @@ class Focal:
             if cur_node.g <= node.g:
                 return
         self.nodes[pos] = node
-        heapq.heappush(self.data, (self.heuristic_func(node), node))
+        heapq.heappush(self.data, (self.heuristic_func(node.i, node.j, self.goal_i, self.goal_j), node))
 
     def get_best_node(self):
         while True:

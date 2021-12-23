@@ -12,7 +12,7 @@ class FocalSIPP(SearchFunction):
 
     def _find(self, grid_map, start_i, start_j, goal_i, goal_j):
         OPEN_AND_CLOSED = OpenAndClosed()
-        FOCAL = Focal(self.additional_heuristic_function)
+        FOCAL = Focal(self.additional_heuristic_function, goal_j, goal_j)
 
         start = Node(start_i, start_j, h=self.heuristic_function(start_i, start_j, goal_i, goal_j))
 

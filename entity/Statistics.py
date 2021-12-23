@@ -34,7 +34,8 @@ class Statistics:
             s += f'number of agents: {key}, success rate: {self.success_count[key] / value}'
             if self.success_count[key] != 0:
                 s += f', mean makespan: {self.sum_makespan[key] / self.success_count[key]}, '
-                s += f'mean flowtime: {self.sum_flowtime[key] / self.success_count[key]}\n'
+                s += f'mean flowtime: {self.sum_flowtime[key] / self.success_count[key]}'
+            s += '\n'
         return s
 
     def __repr__(self):
