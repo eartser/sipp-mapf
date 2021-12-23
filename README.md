@@ -17,7 +17,7 @@ SIPP modifications that we implemented:
     - Focal SIPP
 - Anytime SIPP
 
-To learn more abot the algorithms view articles in References section.
+To learn more abot the algorithms view articles in [References](#references) section.
 
 ## Installation and guidance
 
@@ -56,7 +56,7 @@ number of agents: 50, success rate: 1.0, mean makespan: 71.2, mean flowtime: 34.
 ```
 and save arena.gif file with the planned agents' paths in motion, similar to the one below.
 
-GIF
+![](https://github.com/eartser/sipp-mapf/blob/master/gifs/arena.gif)
 
 
 ## References
