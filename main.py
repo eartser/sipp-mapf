@@ -13,6 +13,7 @@ from IPython.display import Image
 from testing.run_scens import run_scens
 from entity.Statistics import Statistics
 import argparse
+import random
 
 
 def manhattan_distance(i1, j1, i2, j2):
@@ -26,6 +27,7 @@ def optional_heuristic(node):
 
 
 if __name__ == '__main__':
+    random.seed(243)
 
     parser = argparse.ArgumentParser(description='Multi-agent path finding using different algorithms')
 
@@ -63,5 +65,3 @@ if __name__ == '__main__':
               args.gif_filename, args.time_limit)
 
     print(stats)
-    # for key, value in stats.success_count.items():
-    #     print(f'number of agents: {key}, success cnt: {value}')
