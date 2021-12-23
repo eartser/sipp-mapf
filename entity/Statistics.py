@@ -1,28 +1,33 @@
 from dataclasses import dataclass
-import numpy as np
 
 
 @dataclass
 class Statistics:
-    map: str
-    correctness: [int]
-    path_length: [float]
-    optimal_length: [float]
-    nodes_created: [int]
-    nodes_expanded: [int]
+    success_count = {}
+    runs_count = {}
+    sum_makespan = {}
+    sum_flowtime = {}
 
-    def add_stat(self, correctness=0, path_length=0, optimal_length=1, nodes_created=0, nodes_expanded=0):
-        self.correctness.append(correctness)
-        self.path_length.append(path_length)
-        self.optimal_length.append(optimal_length)
-        self.nodes_created.append(nodes_created)
-        self.nodes_expanded.append(nodes_expanded)
+    def add_stat(self, cnt_agents, success, makespan, flowtime):
+        if cnt_agents not in self.runs_count:
+            self.runs_count[cnt_agents] = 0
+            self.success_count[cnt_agents] = 0
+            self.sum_flowtime[cnt_agents] = 0
+            self.sum_makespan[cnt_agents] = 0
 
-    def correctness_rate(self):
-        return np.mean(self.correctness)
+        self.runs_count[cnt_agents] += 1
+        if success:
+            self.success_count[cnt_agents] += 1
+            self.sum_makespan[cnt_agents] += makespan
+            self.sum_flowtime[cnt_agents] += flowtime
 
-    def length_ratio(self):
-        ratio = np.array(self.path_length) / np.array(self.optimal_length)
-        return ratio.tolist()
+    def __str__(self):
+        s = ""
+        for key, value in self.runs_count.items():
+            s += f'number of agents: {key}, success rate: {self.success_count[key] / value}, '
+            s += f'mean makespan: {self.sum_makespan[key] / value}, mean flowtime: {self.sum_flowtime[key] / (value * key)}\n'
+        return s
 
-    # TODO: Additional statistic functions
+    def __repr__(self):
+        return str(self)
+

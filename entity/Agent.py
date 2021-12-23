@@ -8,3 +8,9 @@ class Agent:
 
     def __lt__(self, other):
         return self.priority < other.priority
+
+    def __str__(self):
+        return f'(si={self.start_i}, sj={self.start_j}, gi={self.goal_i}, gj={self.goal_j})'
+
+    def __repr__(self):
+        return str(self)
