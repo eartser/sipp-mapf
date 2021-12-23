@@ -25,7 +25,7 @@ class Statistics:
         s = ""
         for key, value in self.runs_count.items():
             s += f'number of agents: {key}, success rate: {self.success_count[key] / value}, '
-            s += f'mean makespan: {self.sum_makespan[key] / value}, mean flowtime: {self.sum_flowtime[key] / (value * key)}\n'
+            s += f'mean makespan: {self.sum_makespan[key] / value}, mean flowtime: {self.sum_flowtime[key] / (value)}\n'
         return s
 
     def __repr__(self):
