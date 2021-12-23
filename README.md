@@ -60,9 +60,9 @@ and save arena.gif file with the planned agents' paths in motion, similar to the
 
 
 ## References
-[1] Phillips, M. and Likhachev, M., 2011, May. [SIPP: Safe interval path planning for dynamic environments.](http://www.cs.cmu.edu/~maxim/files/sipp_icra11.pdf).
+[1] Phillips, M. and Likhachev, M., 2011, May. [SIPP: Safe interval path planning for dynamic environments.](http://www.cs.cmu.edu/~maxim/files/sipp_icra11.pdf)
 
-[2] Venkatraman, N., Phillips, M. and Likhachev, M., 2012, Oct., [Anytime Safe Interval Path Planning for dynamic environments.](https://ieeexplore.ieee.org/document/6386191/).
+[2] Venkatraman, N., Phillips, M. and Likhachev, M., 2012, Oct., [Anytime Safe Interval Path Planning for dynamic environments.](https://ieeexplore.ieee.org/document/6386191/)
 
-[3] Yakovlev, K., Andreychuk, A. and Stern, R., 2020, Jun., [Revisiting Bounded-Suboptimal Safe Interval Path Planning.](https://arxiv.org/abs/2006.01195).
+[3] Yakovlev, K., Andreychuk, A. and Stern, R., 2020, Jun., [Revisiting Bounded-Suboptimal Safe Interval Path Planning.](https://arxiv.org/abs/2006.01195)
 
