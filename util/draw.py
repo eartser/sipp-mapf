@@ -26,6 +26,8 @@ def Draw(gridMap: Map, paths: list, obstacles: list, filename='animated_trajecto
                     if len(gridMap._safe_intervals[i][j]) == 0:
                         draw.rectangle((j * k, i * k, (j + 1) * k - 1, (i + 1) * k - 1), fill=(70, 80, 80))
             for i in range(len(paths)):
+                if len(paths[i]) <= step:
+                    continue
                 curNode = paths[i][min(len(paths[i]) - 1, step)]
                 nextNode = paths[i][min(len(paths[i]) - 1, step + min(n, 1))]
                 draw.ellipse((float(curNode.j + n * (nextNode.j - curNode.j) / quality + 0.2) * k,
@@ -44,4 +46,4 @@ def Draw(gridMap: Map, paths: list, obstacles: list, filename='animated_trajecto
             images.append(im)
         step += 1
     images[0].save('./' + filename + '.gif', save_all=True, append_images=images[1:], optimize=False,
-                   duration=1000 / quality, loop=0)
+                   duration=750 / quality, loop=0)

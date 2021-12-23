@@ -1,4 +1,3 @@
-import time
 import threading
 
 
@@ -8,12 +7,9 @@ class SearchFunction:
         self.heuristic_function = heuristic_function
         self.goal_node = None
         self.path_found = False
-        self.lock = threading.Lock()
 
     def find(self, grid_map, start_i, start_j, goal_i, goal_j):
-        thread = threading.Thread(target=self._find, args=[grid_map, start_i, start_j, goal_i, goal_j])
-        thread.start()
-        thread.join(timeout=60)
+        self._find(grid_map, start_i, start_j, goal_i, goal_j)
         if self.goal_node is not None:
             self.path_found = True
         return self.path_found, self.goal_node
@@ -22,9 +18,8 @@ class SearchFunction:
         raise NotImplementedError
 
     def publish_solution(self, goal_node):
-        self.lock.acquire()
         self.goal_node = goal_node
-        self.lock.release()
+        self.path_found = True
 
     @staticmethod
     def make_path(goal_node):

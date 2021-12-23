@@ -36,6 +36,8 @@ class Map:
     def get_successors(self, node):
         successors = []
         start_t = node.g + 1  # the earliest time we can get to the successor
+        if node.i >= self._height or node.j >= self._width or node.interval >= len(self._safe_intervals[node.i][node.j]):
+            print(self._height, self._width, len(self._safe_intervals[node.i][node.j]), node.i, node.j, node.interval)
         end_t = self._safe_intervals[node.i][node.j][node.interval].end + 1  # the latest time -//-
         for m in self.get_neighbors(node.i, node.j):
             i, j = m
